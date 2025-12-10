@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distance Capture - Debug</title>
+    <title>Distance Capture - Fixed</title>
     <style>
         * {
             margin: 0;
@@ -13,101 +13,92 @@
         
         body {
             font-family: Arial, sans-serif;
-            background: #1a1a2e;
+            background: #000;
             color: #fff;
+            overflow: hidden;
         }
         
-        #app {
+        #container {
             width: 100vw;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
+            position: relative;
         }
         
-        /* Start screen */
+        /* Start button */
         #start-screen {
-            flex: 1;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 1000;
         }
         
-        h1 {
-            font-size: 28px;
+        #start-screen h1 {
+            font-size: 32px;
             margin-bottom: 20px;
         }
         
-        #device-info {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-size: 12px;
-            text-align: left;
-            max-width: 90%;
-        }
-        
-        #device-info div {
-            margin: 5px 0;
+        #start-screen p {
+            margin-bottom: 40px;
+            opacity: 0.9;
         }
         
         .btn {
-            padding: 15px 40px;
-            background: #00ff88;
-            color: #000;
+            padding: 20px 50px;
+            background: #fff;
+            color: #667eea;
             border: none;
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
-            margin: 10px;
         }
         
-        .btn:active {
-            background: #00cc6a;
-        }
-        
-        /* AR screen */
-        #ar-screen {
+        /* AR UI overlay */
+        #ar-ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: none;
-            flex: 1;
-            position: relative;
+            pointer-events: none;
+            z-index: 100;
         }
         
-        #ar-screen.active {
-            display: flex;
-            flex-direction: column;
+        #ar-ui.active {
+            display: block;
         }
         
-        #status {
+        #instruction {
             position: absolute;
-            top: 20px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
-            padding: 15px 25px;
-            border-radius: 10px;
+            padding: 15px 30px;
+            border-radius: 12px;
             font-size: 16px;
-            z-index: 100;
-            max-width: 90%;
-            text-align: center;
+            backdrop-filter: blur(10px);
         }
         
         #distance-display {
             position: absolute;
-            top: 80px;
+            top: 100px;
             left: 50%;
             transform: translateX(-50%);
-            background: #00ff88;
+            background: rgba(0, 255, 136, 0.9);
             color: #000;
-            padding: 20px 30px;
+            padding: 20px 40px;
             border-radius: 15px;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
-            z-index: 100;
         }
         
         #crosshair {
@@ -115,9 +106,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            z-index: 100;
+            width: 60px;
+            height: 60px;
         }
         
         #crosshair::before,
@@ -125,10 +115,11 @@
             content: '';
             position: absolute;
             background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
         }
         
         #crosshair::before {
-            width: 50px;
+            width: 60px;
             height: 3px;
             top: 50%;
             left: 0;
@@ -137,7 +128,7 @@
         
         #crosshair::after {
             width: 3px;
-            height: 50px;
+            height: 60px;
             left: 50%;
             top: 0;
             transform: translateX(-50%);
@@ -145,297 +136,242 @@
         
         #capture-btn {
             position: absolute;
-            bottom: 30px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background: #00ff88;
-            border: 5px solid #fff;
+            border: 6px solid #fff;
             border-radius: 50%;
-            font-size: 24px;
-            z-index: 100;
+            font-size: 32px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            pointer-events: all;
             cursor: pointer;
         }
         
-        #distances-list {
+        #distances-panel {
             position: absolute;
             right: 20px;
-            top: 150px;
+            top: 180px;
             background: rgba(0, 0, 0, 0.8);
             padding: 15px;
-            border-radius: 10px;
-            min-width: 180px;
-            z-index: 100;
+            border-radius: 12px;
+            min-width: 200px;
+            backdrop-filter: blur(10px);
         }
         
         .distance-item {
             padding: 10px;
             margin: 5px 0;
             background: rgba(0, 255, 136, 0.2);
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 8px;
+            border-left: 3px solid #00ff88;
         }
         
         /* Results */
-        #results-screen {
+        #results {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: none;
-            flex: 1;
             padding: 20px;
             overflow-y: auto;
+            z-index: 2000;
         }
         
-        #results-screen.active {
+        #results.show {
             display: block;
         }
         
         .result-card {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             padding: 20px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border-left: 4px solid #00ff88;
+            margin: 15px 0;
+            border-radius: 12px;
         }
         
-        #console-log {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.95);
-            padding: 10px;
-            font-size: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 200;
-            display: none;
+        .result-card h3 {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 8px;
         }
         
-        #console-log.show {
-            display: block;
+        .result-card .value {
+            font-size: 32px;
+            font-weight: bold;
         }
         
-        .log-item {
-            padding: 3px 0;
-            border-bottom: 1px solid #333;
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Start Screen -->
-        <div id="start-screen">
-            <h1>📏 Distance Capture</h1>
-            <p>Point camera at object and tap to capture distance</p>
-            
-            <div id="device-info">
-                <div><strong>Browser:</strong> <span id="browser-info">Checking...</span></div>
-                <div><strong>WebXR:</strong> <span id="webxr-support">Checking...</span></div>
-                <div><strong>AR Support:</strong> <span id="ar-support">Checking...</span></div>
-            </div>
-            
-            <button class="btn" onclick="startAR()">START AR</button>
-            <button class="btn" onclick="toggleConsole()" style="background: #666; font-size: 14px;">Show Debug Log</button>
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <h1>📏 Distance Capture</h1>
+        <p>Point camera at surfaces and capture distances</p>
+        <button class="btn" onclick="startAR()">START</button>
+    </div>
+    
+    <!-- AR UI Overlay (appears over camera) -->
+    <div id="ar-ui">
+        <div id="instruction">Point camera at surface</div>
+        <div id="distance-display">-- m</div>
+        <div id="crosshair"></div>
+        
+        <div id="distances-panel">
+            <strong>Captured: <span id="count">0/5</span></strong>
+            <div id="distances-list"></div>
         </div>
         
-        <!-- AR Screen -->
-        <div id="ar-screen">
-            <div id="status">Initializing AR...</div>
-            <div id="distance-display">-- m</div>
-            <div id="crosshair"></div>
-            
-            <div id="distances-list">
-                <strong>Captured:</strong>
-                <div id="list-container"></div>
-            </div>
-            
-            <button id="capture-btn" onclick="captureDistance()">📍</button>
+        <button id="capture-btn" onclick="captureDistance()">📍</button>
+    </div>
+    
+    <!-- Results -->
+    <div id="results">
+        <h1 style="text-align: center; margin-bottom: 30px;">✓ Complete!</h1>
+        <div id="results-container"></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn" onclick="downloadJSON()" style="flex: 1;">Download</button>
+            <button class="btn" onclick="restart()" style="flex: 1; background: #ccc;">Restart</button>
         </div>
-        
-        <!-- Results Screen -->
-        <div id="results-screen">
-            <h1>✓ Complete!</h1>
-            <div id="results-container"></div>
-            <button class="btn" onclick="downloadData()">Download</button>
-            <button class="btn" onclick="restart()" style="background: #666;">Restart</button>
-        </div>
-        
-        <!-- Console Log -->
-        <div id="console-log"></div>
     </div>
 
     <script>
-        // Debug logging
-        const logs = [];
-        function log(message, isError = false) {
-            const timestamp = new Date().toLocaleTimeString();
-            const logMessage = `[${timestamp}] ${message}`;
-            console.log(logMessage);
-            logs.push({ message: logMessage, isError });
-            updateConsole();
-        }
-        
-        function updateConsole() {
-            const consoleDiv = document.getElementById('console-log');
-            consoleDiv.innerHTML = logs.map(l => 
-                `<div class="log-item" style="color: ${l.isError ? '#ff4444' : '#00ff88'}">${l.message}</div>`
-            ).join('');
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-        
-        function toggleConsole() {
-            document.getElementById('console-log').classList.toggle('show');
-        }
-        
-        // Check device capabilities
-        async function checkCapabilities() {
-            log('Checking device capabilities...');
-            
-            // Browser info
-            const ua = navigator.userAgent;
-            let browser = 'Unknown';
-            if (ua.includes('Chrome') && !ua.includes('Edge')) browser = 'Chrome ✓';
-            else if (ua.includes('Firefox')) browser = 'Firefox';
-            else if (ua.includes('Safari')) browser = 'Safari';
-            document.getElementById('browser-info').textContent = browser;
-            log(`Browser: ${browser}`);
-            
-            // WebXR support
-            if (navigator.xr) {
-                document.getElementById('webxr-support').textContent = 'Available ✓';
-                document.getElementById('webxr-support').style.color = '#00ff88';
-                log('WebXR API available');
-                
-                try {
-                    const supported = await navigator.xr.isSessionSupported('immersive-ar');
-                    if (supported) {
-                        document.getElementById('ar-support').textContent = 'Supported ✓';
-                        document.getElementById('ar-support').style.color = '#00ff88';
-                        log('AR session supported');
-                    } else {
-                        document.getElementById('ar-support').textContent = 'Not supported ✗';
-                        document.getElementById('ar-support').style.color = '#ff4444';
-                        log('AR session NOT supported', true);
-                    }
-                } catch (error) {
-                    document.getElementById('ar-support').textContent = 'Error checking';
-                    log(`Error checking AR support: ${error.message}`, true);
-                }
-            } else {
-                document.getElementById('webxr-support').textContent = 'Not available ✗';
-                document.getElementById('webxr-support').style.color = '#ff4444';
-                document.getElementById('ar-support').textContent = 'N/A';
-                log('WebXR API NOT available', true);
-            }
-        }
-        
-        // Run capability check on load
-        checkCapabilities();
-        
-        // AR variables
         let xrSession = null;
         let xrRefSpace = null;
+        let gl = null;
         let hitTestSource = null;
         let distances = [];
         let currentDistance = 0;
         
         async function startAR() {
-            log('Starting AR session...');
-            
             try {
-                // Check if WebXR exists
+                console.log('1. Checking WebXR support...');
+                
                 if (!navigator.xr) {
-                    throw new Error('WebXR not available. Use Chrome on Android.');
+                    alert('WebXR not supported. Use Chrome browser.');
+                    return;
                 }
                 
-                log('Checking AR session support...');
                 const supported = await navigator.xr.isSessionSupported('immersive-ar');
+                console.log('2. AR supported:', supported);
                 
                 if (!supported) {
-                    throw new Error('AR not supported on this device. Try Chrome on a newer Android phone.');
+                    alert('AR not supported on this device. Make sure you:\n1. Use Chrome\n2. Have Android 8+\n3. Install "Google Play Services for AR" from Play Store');
+                    return;
                 }
                 
-                log('Requesting AR session...');
+                console.log('3. Requesting XR session...');
+                
+                // Request session WITHOUT dom-overlay (this often causes blank screen)
                 xrSession = await navigator.xr.requestSession('immersive-ar', {
-                    requiredFeatures: ['hit-test'],
-                    optionalFeatures: ['dom-overlay'],
-                    domOverlay: { root: document.body }
+                    requiredFeatures: ['hit-test']
                 });
                 
-                log('AR session created successfully!');
+                console.log('4. XR session created!');
                 
-                // Hide start screen, show AR screen
+                // Hide start screen
                 document.getElementById('start-screen').style.display = 'none';
-                document.getElementById('ar-screen').classList.add('active');
                 
-                log('Setting up AR reference space...');
+                // Show AR UI
+                document.getElementById('ar-ui').classList.add('active');
+                
+                // Set up WebGL context
+                console.log('5. Setting up WebGL...');
+                const canvas = document.createElement('canvas');
+                gl = canvas.getContext('webgl', { xrCompatible: true });
+                
+                await xrSession.updateRenderState({
+                    baseLayer: new XRWebGLLayer(xrSession, gl)
+                });
+                
+                console.log('6. Setting up reference spaces...');
                 xrRefSpace = await xrSession.requestReferenceSpace('local');
-                
-                log('Setting up hit test source...');
                 const viewerSpace = await xrSession.requestReferenceSpace('viewer');
+                
+                console.log('7. Setting up hit test...');
                 hitTestSource = await xrSession.requestHitTestSource({ space: viewerSpace });
                 
-                log('Starting AR render loop...');
+                console.log('8. Starting render loop...');
                 xrSession.requestAnimationFrame(onXRFrame);
                 
-                updateStatus('Point camera at object');
-                log('AR ready! Point camera at surfaces.');
+                console.log('✓ AR started successfully!');
                 
             } catch (error) {
-                log(`AR Error: ${error.message}`, true);
-                alert('AR Error: ' + error.message + '\n\nMake sure you:\n1. Use Chrome browser\n2. Grant camera permission\n3. Have a newer Android phone');
+                console.error('AR Error:', error);
+                alert('Error: ' + error.message);
             }
         }
         
         function onXRFrame(time, frame) {
             if (!xrSession) return;
             
-            xrSession.requestAnimationFrame(onXRFrame);
+            const session = frame.session;
+            session.requestAnimationFrame(onXRFrame);
             
-            if (hitTestSource && distances.length < 5) {
-                const hitTestResults = frame.getHitTestResults(hitTestSource);
+            // Get pose
+            const pose = frame.getViewerPose(xrRefSpace);
+            
+            if (pose) {
+                // Clear the screen (important for rendering)
+                const layer = session.renderState.baseLayer;
+                gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
+                gl.clearColor(0, 0, 0, 0); // Transparent
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 
-                if (hitTestResults.length > 0) {
-                    const pose = hitTestResults[0].getPose(xrRefSpace);
-                    if (pose) {
-                        const position = pose.transform.position;
-                        currentDistance = Math.sqrt(
-                            position.x ** 2 + 
-                            position.y ** 2 + 
-                            position.z ** 2
-                        );
+                // Do hit test
+                if (hitTestSource && distances.length < 5) {
+                    const hitTestResults = frame.getHitTestResults(hitTestSource);
+                    
+                    if (hitTestResults.length > 0) {
+                        const hit = hitTestResults[0];
+                        const hitPose = hit.getPose(xrRefSpace);
                         
-                        updateDistanceDisplay(currentDistance);
+                        if (hitPose) {
+                            const position = hitPose.transform.position;
+                            currentDistance = Math.sqrt(
+                                position.x ** 2 + 
+                                position.y ** 2 + 
+                                position.z ** 2
+                            );
+                            
+                            updateDistanceDisplay(currentDistance);
+                        }
+                    } else {
+                        updateDistanceDisplay(null);
                     }
-                } else {
-                    updateDistanceDisplay(null);
                 }
             }
         }
         
-        function updateStatus(text) {
-            document.getElementById('status').textContent = text;
-        }
-        
         function updateDistanceDisplay(distance) {
             const display = document.getElementById('distance-display');
-            if (distance !== null) {
+            if (distance !== null && distance > 0) {
                 const meters = distance.toFixed(2);
                 const feet = (distance * 3.28084).toFixed(2);
                 display.textContent = `${meters}m (${feet}ft)`;
+                display.style.background = 'rgba(0, 255, 136, 0.9)';
             } else {
                 display.textContent = 'Point at surface';
+                display.style.background = 'rgba(255, 68, 68, 0.9)';
             }
         }
         
         function captureDistance() {
-            if (currentDistance === 0) {
-                log('No distance to capture (point at a surface)', true);
+            if (currentDistance === 0 || currentDistance === null) {
+                alert('Point camera at a surface first!');
                 return;
             }
             
             if (distances.length >= 5) {
-                log('Already captured 5 distances', true);
+                alert('Already captured 5 distances!');
                 return;
             }
             
@@ -443,41 +379,39 @@
                 meters: currentDistance,
                 feet: currentDistance * 3.28084,
                 inches: currentDistance * 39.3701,
-                cm: currentDistance * 100
+                cm: currentDistance * 100,
+                timestamp: new Date().toISOString()
             };
             
             distances.push(data);
-            log(`Captured distance ${distances.length}: ${data.meters.toFixed(2)}m`);
             
-            // Vibrate
+            // Haptic feedback
             if (navigator.vibrate) {
                 navigator.vibrate(100);
             }
             
-            // Update list
-            updateDistancesList();
+            // Update UI
+            document.getElementById('count').textContent = `${distances.length}/5`;
             
-            // Check if done
-            if (distances.length >= 4) {
-                updateStatus(`${distances.length}/5 captured (tap to finish or add 5th)`);
-                
-                if (distances.length === 5) {
-                    setTimeout(finishCapture, 500);
-                }
-            } else {
-                updateStatus(`${distances.length}/5 captured`);
+            const listItem = document.createElement('div');
+            listItem.className = 'distance-item';
+            listItem.textContent = `${distances.length}. ${data.meters.toFixed(2)}m`;
+            document.getElementById('distances-list').appendChild(listItem);
+            
+            console.log(`Captured distance ${distances.length}:`, data.meters.toFixed(2) + 'm');
+            
+            // Auto-finish after 5
+            if (distances.length === 5) {
+                setTimeout(() => {
+                    finishCapture();
+                }, 500);
+            } else if (distances.length === 4) {
+                document.getElementById('instruction').textContent = '4 captured! Add 5th or tap finish';
             }
         }
         
-        function updateDistancesList() {
-            const container = document.getElementById('list-container');
-            container.innerHTML = distances.map((d, i) => 
-                `<div class="distance-item">${i + 1}. ${d.meters.toFixed(2)}m</div>`
-            ).join('');
-        }
-        
         function finishCapture() {
-            log('Finishing capture...');
+            console.log('Finishing capture...');
             
             if (xrSession) {
                 xrSession.end();
@@ -488,28 +422,27 @@
         }
         
         function showResults() {
-            document.getElementById('ar-screen').classList.remove('active');
-            document.getElementById('results-screen').classList.add('active');
+            document.getElementById('ar-ui').classList.remove('active');
+            document.getElementById('results').classList.add('show');
             
             const container = document.getElementById('results-container');
-            container.innerHTML = distances.map((d, i) => `
-                <div class="result-card">
-                    <h3>Distance ${i + 1}</h3>
-                    <div style="font-size: 28px; font-weight: bold; margin: 10px 0;">
-                        ${d.meters.toFixed(2)} m
-                    </div>
-                    <div style="opacity: 0.8;">
-                        ${d.feet.toFixed(2)} ft | 
-                        ${d.inches.toFixed(1)} in | 
-                        ${d.cm.toFixed(1)} cm
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = '';
             
-            log('Results displayed');
+            distances.forEach((d, i) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <h3>Distance ${i + 1}</h3>
+                    <div class="value">${d.meters.toFixed(2)} m</div>
+                    <div style="margin-top: 10px; opacity: 0.8;">
+                        ${d.feet.toFixed(2)} ft | ${d.inches.toFixed(1)} in | ${d.cm.toFixed(1)} cm
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
         
-        function downloadData() {
+        function downloadJSON() {
             const data = {
                 distances: distances,
                 count: distances.length,
@@ -523,18 +456,16 @@
             a.download = `distances-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            
-            log('Data downloaded');
         }
         
         function restart() {
             distances = [];
             currentDistance = 0;
             
-            document.getElementById('results-screen').classList.remove('active');
+            document.getElementById('results').classList.remove('show');
             document.getElementById('start-screen').style.display = 'flex';
-            
-            log('Restarted');
+            document.getElementById('distances-list').innerHTML = '';
+            document.getElementById('count').textContent = '0/5';
         }
     </script>
 </body>
