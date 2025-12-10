@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distance Capture - With Labels</title>
+    <title>Distance Capture - Fixed UI</title>
     <style>
         * {
             margin: 0;
@@ -79,13 +79,13 @@
         /* Top instruction */
         #instruction {
             position: fixed;
-            top: 20px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.95);
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 18px;
             font-weight: 600;
             border: 3px solid #00ff88;
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
@@ -94,47 +94,32 @@
             text-align: center;
         }
         
-        /* Distance display */
+        /* Distance display - HUGE */
         #distance-display {
             position: fixed;
-            top: 70px;
+            top: 110px;
             left: 50%;
             transform: translateX(-50%);
             background: #00ff88;
             color: #000;
-            padding: 25px 40px;
-            border-radius: 20px;
-            font-size: 42px;
+            padding: 30px 50px;
+            border-radius: 25px;
+            font-size: 48px;
             font-weight: 900;
             z-index: 100;
             box-shadow: 0 0 50px rgba(0, 255, 136, 0.8);
-            border: 4px solid #fff;
+            border: 5px solid #fff;
             text-align: center;
-            min-width: 220px;
+            min-width: 250px;
         }
         
         #distance-display .sub {
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-        
-        /* Progress */
-        #progress {
-            position: fixed;
-            top: 180px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.95);
-            padding: 12px 30px;
-            border-radius: 25px;
             font-size: 18px;
-            font-weight: bold;
-            z-index: 100;
-            border: 3px solid #00ff88;
+            font-weight: 600;
+            margin-top: 8px;
         }
         
-        /* Crosshair */
+        /* Crosshair - BRIGHT */
         #crosshair {
             position: fixed;
             top: 50%;
@@ -190,44 +175,49 @@
             50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
         }
         
+        /* Progress */
+        #progress {
+            position: fixed;
+            top: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 100;
+            border: 3px solid #00ff88;
+        }
+        
         /* List */
         #list-panel {
             position: fixed;
-            right: 15px;
-            top: 230px;
+            right: 20px;
+            top: 270px;
             background: rgba(0, 0, 0, 0.95);
-            padding: 15px;
-            border-radius: 15px;
-            min-width: 180px;
-            max-width: 200px;
+            padding: 20px;
+            border-radius: 20px;
+            min-width: 200px;
             z-index: 100;
             border: 3px solid #00ff88;
         }
         
         #list-panel h3 {
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin-bottom: 12px;
             color: #00ff88;
             text-transform: uppercase;
-            font-weight: bold;
         }
         
         .list-item {
             background: rgba(0, 255, 136, 0.3);
-            padding: 10px;
-            margin: 6px 0;
-            border-radius: 8px;
-            border-left: 4px solid #00ff88;
-            font-size: 13px;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border-left: 5px solid #00ff88;
+            font-size: 16px;
             font-weight: 600;
-            line-height: 1.4;
-        }
-        
-        .list-item .label {
-            color: #ffd93d;
-            font-weight: 800;
-            display: block;
-            margin-bottom: 3px;
         }
         
         /* MASSIVE capture button */
@@ -262,12 +252,12 @@
             bottom: 170px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 18px 45px;
+            padding: 20px 50px;
             background: #ffd93d;
             color: #000;
             border: 5px solid #fff;
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
             z-index: 200;
@@ -277,132 +267,6 @@
         
         #finish-btn.show {
             display: block;
-        }
-        
-        /* LABEL POPUP */
-        #label-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-            backdrop-filter: blur(10px);
-        }
-        
-        #label-popup.show {
-            display: flex;
-        }
-        
-        .popup-content {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 35px 30px;
-            border-radius: 25px;
-            max-width: 90%;
-            width: 400px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            border: 4px solid #fff;
-        }
-        
-        .popup-content h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .popup-content p {
-            text-align: center;
-            opacity: 0.9;
-            margin-bottom: 25px;
-            font-size: 16px;
-        }
-        
-        .quick-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .quick-btn {
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 3px solid rgba(255, 255, 255, 0.5);
-            color: #fff;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .quick-btn:active {
-            transform: scale(0.95);
-            background: #00ff88;
-            color: #000;
-        }
-        
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-        
-        .custom-input-group {
-            margin-bottom: 20px;
-        }
-        
-        .custom-input-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        .custom-input-group input {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            border: 3px solid rgba(255, 255, 255, 0.5);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            font-weight: 600;
-        }
-        
-        .custom-input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .popup-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        
-        .popup-btn {
-            padding: 16px;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .popup-btn-save {
-            background: #00ff88;
-            color: #000;
-        }
-        
-        .popup-btn-cancel {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.5);
         }
         
         /* Results */
@@ -447,12 +311,9 @@
         }
         
         .card h3 {
-            font-size: 18px;
-            opacity: 0.9;
+            font-size: 14px;
+            opacity: 0.8;
             margin-bottom: 8px;
-            text-transform: uppercase;
-            color: #ffd93d;
-            font-weight: 800;
         }
         
         .card .big {
@@ -503,7 +364,7 @@
     <div id="start-screen">
         <h1>📏 Distance Capture</h1>
         <p style="font-size: 18px; margin-bottom: 40px; opacity: 0.9;">
-            Point camera at surfaces<br>and label each measurement
+            Point camera at surfaces<br>and tap to capture distances
         </p>
         <button class="start-btn" onclick="start()">START</button>
     </div>
@@ -534,33 +395,6 @@
             <button id="capture-btn" onclick="capture()">📍</button>
             <button id="finish-btn" onclick="finish()">✓ FINISH</button>
         </div>
-        
-        <!-- Label Popup -->
-        <div id="label-popup">
-            <div class="popup-content">
-                <h2>Label This Distance</h2>
-                <p>Select location or enter custom label</p>
-                
-                <div class="quick-buttons">
-                    <button class="quick-btn" onclick="saveWithLabel('Left')">← Left</button>
-                    <button class="quick-btn" onclick="saveWithLabel('Right')">Right →</button>
-                    <button class="quick-btn" onclick="saveWithLabel('Front')">↑ Front</button>
-                    <button class="quick-btn" onclick="saveWithLabel('Back')">↓ Back</button>
-                </div>
-                
-                <div class="divider">OR</div>
-                
-                <div class="custom-input-group">
-                    <label>Custom Label:</label>
-                    <input type="text" id="custom-label" placeholder="e.g., Top, Bottom, Door..." maxlength="20">
-                </div>
-                
-                <div class="popup-actions">
-                    <button class="popup-btn popup-btn-cancel" onclick="cancelLabel()">Cancel</button>
-                    <button class="popup-btn popup-btn-save" onclick="saveCustomLabel()">Save</button>
-                </div>
-            </div>
-        </div>
     </div>
     
     <!-- Results -->
@@ -588,7 +422,6 @@
         let hitTestSource = null;
         let distances = [];
         let currentDist = 0;
-        let pendingDistance = null;
         
         async function start() {
             try {
@@ -603,25 +436,30 @@
                     return;
                 }
                 
+                // Request with dom-overlay pointing to overlay div
                 xrSession = await navigator.xr.requestSession('immersive-ar', {
                     requiredFeatures: ['hit-test'],
                     optionalFeatures: ['dom-overlay'],
                     domOverlay: { root: document.getElementById('overlay') }
                 });
                 
+                // Setup WebGL
                 const canvas = document.createElement('canvas');
                 gl = canvas.getContext('webgl', { xrCompatible: true });
                 await xrSession.updateRenderState({
                     baseLayer: new XRWebGLLayer(xrSession, gl)
                 });
                 
+                // Setup spaces
                 xrRefSpace = await xrSession.requestReferenceSpace('local');
                 const viewerSpace = await xrSession.requestReferenceSpace('viewer');
                 hitTestSource = await xrSession.requestHitTestSource({ space: viewerSpace });
                 
+                // Show AR UI
                 document.getElementById('start-screen').style.display = 'none';
                 document.getElementById('ar-ui').classList.add('active');
                 
+                // Start loop
                 xrSession.requestAnimationFrame(onFrame);
                 
                 console.log('AR started!');
@@ -684,51 +522,22 @@
             
             if (distances.length >= 5) return;
             
-            // Store the current distance temporarily
-            pendingDistance = {
+            const data = {
                 meters: currentDist,
                 feet: currentDist * 3.28084,
                 inches: currentDist * 39.3701,
                 cm: currentDist * 100
             };
             
-            // Show label popup
-            document.getElementById('label-popup').classList.add('show');
-            document.getElementById('custom-label').value = '';
-            document.getElementById('custom-label').focus();
-        }
-        
-        function saveWithLabel(label) {
-            if (!pendingDistance) return;
-            
-            pendingDistance.label = label;
-            distances.push(pendingDistance);
-            pendingDistance = null;
+            distances.push(data);
             
             if (navigator.vibrate) navigator.vibrate(100);
             
-            document.getElementById('label-popup').classList.remove('show');
             updateUI();
             
             if (distances.length === 5) {
                 setTimeout(finish, 1000);
             }
-        }
-        
-        function saveCustomLabel() {
-            const customLabel = document.getElementById('custom-label').value.trim();
-            
-            if (!customLabel) {
-                alert('⚠️ Please enter a label or select quick button');
-                return;
-            }
-            
-            saveWithLabel(customLabel);
-        }
-        
-        function cancelLabel() {
-            pendingDistance = null;
-            document.getElementById('label-popup').classList.remove('show');
         }
         
         function updateUI() {
@@ -747,10 +556,7 @@
             
             document.getElementById('list').innerHTML = 
                 distances.map((d, i) => 
-                    `<div class="list-item">
-                        <span class="label">${d.label}</span>
-                        ${d.meters.toFixed(2)}m
-                    </div>`
+                    `<div class="list-item">${i+1}. ${d.meters.toFixed(2)}m</div>`
                 ).join('');
         }
         
@@ -776,7 +582,7 @@
             document.getElementById('cards').innerHTML = 
                 distances.map((d, i) => `
                     <div class="card">
-                        <h3>${d.label}</h3>
+                        <h3>DISTANCE ${i+1}</h3>
                         <div class="big">${d.meters.toFixed(2)} m</div>
                         <div class="info">
                             ${d.feet.toFixed(2)} ft | 
@@ -805,7 +611,7 @@
         
         function copy() {
             const text = distances.map((d, i) => 
-                `${d.label}: ${d.meters.toFixed(2)}m (${d.feet.toFixed(2)}ft)`
+                `${i+1}. ${d.meters.toFixed(2)}m (${d.feet.toFixed(2)}ft)`
             ).join('\n');
             
             navigator.clipboard.writeText(text).then(() => {
@@ -815,7 +621,7 @@
         
         function share() {
             const text = distances.map((d, i) => 
-                `${d.label}: ${d.meters.toFixed(2)}m`
+                `${i+1}. ${d.meters.toFixed(2)}m`
             ).join('\n');
             
             if (navigator.share) {
@@ -828,70 +634,12 @@
         function restart() {
             distances = [];
             currentDist = 0;
-            pendingDistance = null;
             document.getElementById('results').classList.remove('show');
             document.getElementById('start-screen').style.display = 'flex';
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('ar-ui').classList.remove('active');
             document.getElementById('finish-btn').classList.remove('show');
         }
-        
-        // Allow Enter key to save custom label
-        document.addEventListener('DOMContentLoaded', () => {
-            const input = document.getElementById('custom-label');
-            if (input) {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        saveCustomLabel();
-                    }
-                });
-            }
-        });
     </script>
 </body>
 </html>
-```
-
----
-
-## **What's New:**
-
-### **1. Label Popup After Capture**
-
-When you tap the capture button, a popup appears with:
-
-**Quick Buttons:**
-- ← Left
-- Right →
-- ↑ Front
-- ↓ Back
-
-**Custom Input:**
-- Text box for custom labels
-- Examples: "Top", "Bottom", "Door", "Window", etc.
-
-### **2. Updated Display**
-
-**Captured List (Right Side):**
-```
-Captured
-─────────
-Left
-2.45m
-
-Right
-3.10m
-
-Front
-2.80m
-```
-
-**Results Screen:**
-```
-LEFT
-2.45 m
-8.04 ft | 96.5 in | 245.0 cm
-
-RIGHT
-3.10 m
-10.17 ft | 122.0 in | 310.0 cm
