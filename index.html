@@ -76,16 +76,16 @@
             display: block;
         }
         
-        /* Top instruction */
+        /* Top instruction - FIXED POSITION */
         #instruction {
             position: fixed;
-            top: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.95);
-            padding: 15px 30px;
-            border-radius: 15px;
-            font-size: 18px;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             border: 3px solid #00ff88;
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
@@ -94,29 +94,44 @@
             text-align: center;
         }
         
-        /* Distance display - HUGE */
+        /* Distance display - MOVED DOWN */
         #distance-display {
             position: fixed;
-            top: 110px;
+            top: 70px; /* Changed from 110px */
             left: 50%;
             transform: translateX(-50%);
             background: #00ff88;
             color: #000;
-            padding: 30px 50px;
-            border-radius: 25px;
-            font-size: 48px;
+            padding: 25px 40px; /* Reduced padding */
+            border-radius: 20px;
+            font-size: 42px; /* Slightly smaller */
             font-weight: 900;
             z-index: 100;
             box-shadow: 0 0 50px rgba(0, 255, 136, 0.8);
-            border: 5px solid #fff;
+            border: 4px solid #fff;
             text-align: center;
-            min-width: 250px;
+            min-width: 220px;
         }
         
         #distance-display .sub {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-top: 8px;
+            margin-top: 6px;
+        }
+        
+        /* Progress - MOVED DOWN MORE */
+        #progress {
+            position: fixed;
+            top: 180px; /* Changed from 220px to give more space */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 100;
+            border: 3px solid #00ff88;
         }
         
         /* Crosshair - BRIGHT */
@@ -175,48 +190,35 @@
             50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
         }
         
-        /* Progress */
-        #progress {
-            position: fixed;
-            top: 220px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.95);
-            padding: 15px 35px;
-            border-radius: 30px;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 100;
-            border: 3px solid #00ff88;
-        }
-        
-        /* List */
+        /* List - MOVED DOWN */
         #list-panel {
             position: fixed;
-            right: 20px;
-            top: 270px;
+            right: 15px;
+            top: 230px; /* Changed from 270px */
             background: rgba(0, 0, 0, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            min-width: 200px;
+            padding: 15px;
+            border-radius: 15px;
+            min-width: 180px;
+            max-width: 200px;
             z-index: 100;
             border: 3px solid #00ff88;
         }
         
         #list-panel h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
+            font-size: 14px;
+            margin-bottom: 10px;
             color: #00ff88;
             text-transform: uppercase;
+            font-weight: bold;
         }
         
         .list-item {
             background: rgba(0, 255, 136, 0.3);
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 10px;
-            border-left: 5px solid #00ff88;
-            font-size: 16px;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 8px;
+            border-left: 4px solid #00ff88;
+            font-size: 14px;
             font-weight: 600;
         }
         
@@ -252,12 +254,12 @@
             bottom: 170px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 20px 50px;
+            padding: 18px 45px;
             background: #ffd93d;
             color: #000;
             border: 5px solid #fff;
             border-radius: 50px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             z-index: 200;
@@ -314,6 +316,7 @@
             font-size: 14px;
             opacity: 0.8;
             margin-bottom: 8px;
+            text-transform: uppercase;
         }
         
         .card .big {
@@ -356,6 +359,34 @@
         
         .hidden {
             display: none !important;
+        }
+        
+        /* Responsive adjustments for smaller screens */
+        @media (max-height: 700px) {
+            #instruction {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+            
+            #distance-display {
+                top: 60px;
+                padding: 20px 35px;
+                font-size: 36px;
+            }
+            
+            #distance-display .sub {
+                font-size: 14px;
+            }
+            
+            #progress {
+                top: 150px;
+                font-size: 16px;
+                padding: 10px 25px;
+            }
+            
+            #list-panel {
+                top: 200px;
+            }
         }
     </style>
 </head>
